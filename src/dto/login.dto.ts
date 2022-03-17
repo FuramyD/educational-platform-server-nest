@@ -11,3 +11,7 @@ export interface RegistrationDto {
     email?: string;
     password?: string;
 }
+
+export interface JwtDto {
+    accessToken: string;
+}
