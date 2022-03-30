@@ -2,15 +2,17 @@ import { Body, Controller, Get, HttpStatus, Post, Req, Res, UseGuards } from "@n
 import { Request, Response } from "express";
 import { AuthService } from "./services/auth.service";
 import { User } from "../models/user.model";
-import { JwtDto, RegistrationDto } from "../dto/login.dto";
+import { ChangePasswordDto, JwtDto, RegistrationDto, RestorePasswordDto } from "../dto/auth.dto";
 import { AuthGuard } from "@nestjs/passport";
 import { UserModel } from "../schemas/user.schema";
-
+import { JwtPayload } from "../models/auth.model";
 
 @Controller("auth")
 export class AuthController {
 
-    constructor(private authService: AuthService) {}
+    constructor(
+        private authService: AuthService
+    ) {}
 
     @UseGuards(AuthGuard("local"))
     @Post("/login")
@@ -20,7 +22,7 @@ export class AuthController {
 
     @UseGuards(AuthGuard("jwt"))
     @Get("/profile")
-    public async profile(@Req() req: Request): Promise<unknown> {
+    public async profile(@Req() req: Request): Promise<JwtPayload> {
         return req.user;
     }
     
@@ -36,6 +38,16 @@ export class AuthController {
                 message: "Аккаунт с таким e-mail или телефоном уже существует."
             });
         }
+    }
+
+    @Post("/restore-password")
+    public async restorePassword(@Body() body: RestorePasswordDto): Promise<unknown> {
+        return this.authService.restorePassword(body.email);
+    }
+
+    @Post("/change-password")
+    public async changePassword(@Body() { id, password }: ChangePasswordDto): Promise<unknown> {
+        return this.authService.changePassword(id, password);
     }
 
 }

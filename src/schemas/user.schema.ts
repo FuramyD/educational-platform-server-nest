@@ -19,6 +19,8 @@ export class User {
 
     @Prop() password: string;
 
+    @Prop() passwordEditable: boolean;
+
 }
 
 export const UserSchemaName = User.name;
