@@ -62,7 +62,7 @@ export class AuthService {
     public async changePassword(id: string, newPassword: string): Promise<boolean> {
         const user = await this.userRepository.findOneById(id);
 
-        if (user.passwordEditable) {
+        if (user?.passwordEditable) {
             await this.userRepository.updateUserById(id, { password: newPassword, passwordEditable: false });
             return true;
         }
