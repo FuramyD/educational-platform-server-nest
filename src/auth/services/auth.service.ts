@@ -52,7 +52,7 @@ export class AuthService {
     public async restorePassword(email: string): Promise<unknown> {
         const user = await this.userRepository.findOne({ email });
         if (!user) {
-            throw new BadRequestException({ error: "User is not found" });
+            throw new BadRequestException({ message: "Пользователь не найден" });
         }
 
         await this.sendEmail(user);
@@ -66,7 +66,7 @@ export class AuthService {
             await this.userRepository.updateUserById(id, { password: newPassword, passwordEditable: false });
             return true;
         }
-        throw new BadRequestException({ error: "This user doesn't sent a password change request" });
+        throw new BadRequestException({ message: "Пользователь с таким e-mail не отправлял запрос на смену пароля" });
     }
 
     private async sendEmail(user: UserDocument): Promise<void> {
